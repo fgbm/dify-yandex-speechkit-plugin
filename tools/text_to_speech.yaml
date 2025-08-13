@@ -1,0 +1,149 @@
+identity:
+  name: text_to_speech
+  author: neimp
+  label:
+    en_US: Text to Speech
+    ru_RU: Синтез речи
+  description:
+    en_US: Convert text to speech using Yandex SpeechKit with customizable voice, emotion, and speed parameters.
+    ru_RU: Преобразование текста в речь с помощью Яндекс SpeechKit с настраиваемыми параметрами голоса, эмоций и скорости.
+  icon: icon.svg
+  tags:
+    - productivity
+    - utilities
+
+description:
+  human: 
+    en_US: A tool for converting text to speech with advanced voice customization options including voice selection, emotional coloring, and speech speed control.
+    ru_RU: Инструмент для преобразования текста в речь с продвинутыми возможностями настройки голоса, включая выбор голоса, эмоциональную окраску и контроль скорости речи.
+  llm: A tool for converting text to speech using Yandex SpeechKit. Input should be text content to be synthesized.
+
+parameters:
+  - name: text
+    type: string
+    required: true
+    label:
+      en_US: Text
+      ru_RU: Текст
+    human_description:
+      en_US: Text content to be converted to speech
+      ru_RU: Текстовый контент для преобразования в речь
+    llm_description: text content that needs to be converted to speech
+    form: llm
+  - name: voice
+    type: select
+    required: false
+    default: marina
+    options:
+      - value: marina
+        label:
+          en_US: Marina (Female)
+          ru_RU: Марина (женский)
+      - value: alena
+        label:
+          en_US: Alena (Female)
+          ru_RU: Алёна (женский)
+      - value: filipp
+        label:
+          en_US: Filipp (Male)
+          ru_RU: Филипп (мужской)
+      - value: jane
+        label:
+          en_US: Jane (Female)
+          ru_RU: Джейн (женский)
+      - value: omazh
+        label:
+          en_US: Omazh (Male)
+          ru_RU: Омаж (мужской)
+      - value: ermil
+        label:
+          en_US: Ermil (Male)
+          ru_RU: Ермил (мужской)
+      - value: zahar
+        label:
+          en_US: Zahar (Male)
+          ru_RU: Захар (мужской)
+      - value: madi_ru
+        label:
+          en_US: Madi (Male, Russian)
+          ru_RU: Мади (мужской, рус.)
+    label:
+      en_US: Voice
+      ru_RU: Голос
+    human_description:
+      en_US: Voice to use for speech synthesis
+      ru_RU: Голос для синтеза речи
+    llm_description: voice character to use for speech synthesis (marina, alena, filipp, jane, omazh, ermil, zahar, madi_ru)
+    form: form
+  - name: emotion
+    type: select
+    required: false
+    default: neutral
+    options:
+      - value: neutral
+        label:
+          en_US: Neutral
+          ru_RU: Нейтральная
+      - value: good
+        label:
+          en_US: Good
+          ru_RU: Добрая
+      - value: evil
+        label:
+          en_US: Evil
+          ru_RU: Злая
+      - value: friendly
+        label:
+          en_US: Friendly
+          ru_RU: Дружелюбная
+      - value: whisper
+        label:
+          en_US: Whisper
+          ru_RU: Шёпот
+    label:
+      en_US: Emotion
+      ru_RU: Эмоция
+    human_description:
+      en_US: Emotional coloring of the voice (for Russian voices only)
+      ru_RU: Эмоциональная окраска голоса (только для русских голосов)
+    llm_description: emotional tone for the voice (neutral, good, evil, friendly, whisper)
+    form: form
+  - name: speed
+    type: number
+    required: false
+    default: 1.0
+    min: 0.1
+    max: 3.0
+    label:
+      en_US: Speed
+      ru_RU: Скорость
+    human_description:
+      en_US: Speech rate (0.1 - slowest, 1.0 - normal, 3.0 - fastest)
+      ru_RU: Скорость речи (0.1 - самая медленная, 1.0 - нормальная, 3.0 - самая быстрая)
+    llm_description: speech rate from 0.1 (slowest) to 3.0 (fastest), 1.0 is normal speed
+    form: form
+  - name: format
+    type: select
+    required: false
+    default: mp3
+    options:
+      - value: mp3
+        label:
+          en_US: MP3
+          ru_RU: MP3
+      - value: opus
+        label:
+          en_US: OPUS
+          ru_RU: OPUS
+    label:
+      en_US: Audio Format
+      ru_RU: Формат аудио
+    human_description:
+      en_US: Output audio format
+      ru_RU: Формат выходного аудио
+    llm_description: output audio format (mp3, opus)
+    form: form
+
+extra:
+  python:
+    source: tools/text_to_speech.py

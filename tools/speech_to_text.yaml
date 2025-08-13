@@ -1,0 +1,112 @@
+identity:
+  name: speech_to_text
+  author: neimp
+  label:
+    en_US: Speech to Text
+    ru_RU: Распознавание речи
+  description:
+    en_US: Convert speech from audio files to text using Yandex SpeechKit. Supports multiple audio formats including WEBM.
+    ru_RU: Преобразование речи из аудиофайлов в текст с помощью Яндекс SpeechKit. Поддерживает множество аудиоформатов включая WEBM.
+  icon: icon.svg
+  tags:
+    - productivity
+    - utilities
+
+description:
+  human: 
+    en_US: A tool for converting speech from audio files to text. Supports multiple audio formats including MP3, WAV, FLAC, OGG, OPUS, M4A, and WEBM.
+    ru_RU: Инструмент для преобразования речи из аудиофайлов в текст. Поддерживает множество аудиоформатов включая MP3, WAV, FLAC, OGG, OPUS, M4A и WEBM.
+  llm: A tool for converting speech from audio files to text using Yandex SpeechKit. Input should be an audio file.
+
+parameters:
+  - name: audio_file
+    type: file
+    required: true
+    label:
+      en_US: Audio File
+      ru_RU: Аудиофайл
+    human_description:
+      en_US: Audio file containing speech to be converted to text
+      ru_RU: Аудиофайл с речью для преобразования в текст
+    llm_description: audio file containing speech that needs to be transcribed to text
+    form: form
+  - name: language
+    type: select
+    required: false
+    default: ru-RU
+    options:
+      - value: ru-RU
+        label:
+          en_US: Russian
+          ru_RU: Русский
+      - value: en-US
+        label:
+          en_US: English
+          ru_RU: Английский
+      - value: tr-TR
+        label:
+          en_US: Turkish
+          ru_RU: Турецкий
+      - value: uk-UA
+        label:
+          en_US: Ukrainian
+          ru_RU: Украинский
+      - value: kk-KZ
+        label:
+          en_US: Kazakh
+          ru_RU: Казахский
+      - value: uz-UZ
+        label:
+          en_US: Uzbek
+          ru_RU: Узбекский
+    label:
+      en_US: Language
+      ru_RU: Язык
+    human_description:
+      en_US: Language of the speech in the audio file
+      ru_RU: Язык речи в аудиофайле
+    llm_description: language of the speech in the audio file (ru-RU for Russian, en-US for English, etc.)
+    form: form
+  - name: topic
+    type: select
+    required: false
+    default: general
+    options:
+      - value: general
+        label:
+          en_US: General
+          ru_RU: Общая
+      - value: maps
+        label:
+          en_US: Maps
+          ru_RU: Карты
+      - value: dates
+        label:
+          en_US: Dates
+          ru_RU: Даты
+      - value: names
+        label:
+          en_US: Names
+          ru_RU: Имена
+      - value: numbers
+        label:
+          en_US: Numbers
+          ru_RU: Числа
+    label:
+      en_US: Topic
+      ru_RU: Тематика
+    human_description:
+      en_US: Speech recognition topic to improve accuracy for specific content types
+      ru_RU: Тематика распознавания для повышения точности для определенных типов контента
+    llm_description: topic of the speech content to improve recognition accuracy (general, maps, dates, names, numbers)
+    form: form
+
+output:
+  type: string
+  description:
+    en_US: Recognized text from the audio file
+    ru_RU: Распознанный текст из аудиофайла
+
+extra:
+  python:
+    source: tools/speech_to_text.py

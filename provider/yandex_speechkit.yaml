@@ -1,0 +1,36 @@
+identity:
+  author: neimp
+  name: yandex_speechkit
+  label:
+    en_US: Yandex SpeechKit
+    ru_RU: Яндекс SpeechKit
+  description:
+    en_US: Yandex SpeechKit tools for advanced speech synthesis and recognition
+    ru_RU: Инструменты Яндекс SpeechKit для продвинутого синтеза и распознавания речи
+  icon: icon.svg
+  tags:
+    - productivity
+    - utilities
+
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: Yandex Cloud API Key
+      ru_RU: API ключ Яндекс Облака
+    placeholder:
+      en_US: Enter your Yandex Cloud service account API key
+      ru_RU: Введите API ключ сервисного аккаунта Яндекс Облака
+    help:
+      en_US: Get your API key from Yandex Cloud console
+      ru_RU: Получите API ключ в консоли Яндекс Облака
+    url: https://cloud.yandex.ru/docs/iam/operations/api-key/create
+
+tools:
+  - tools/speech_to_text.yaml
+  - tools/text_to_speech.yaml
+
+extra:
+  python:
+    source: provider/yandex_speechkit.py
