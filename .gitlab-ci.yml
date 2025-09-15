@@ -1,0 +1,52 @@
+stages:
+  - build
+  - release
+
+variables:
+  # URL для скачивания CLI бинарника dify-plugin (Linux amd64 по умолчанию)
+  DIFY_PLUGIN_CLI_URL: "https://github.com/langgenius/dify-plugin/releases/latest/download/dify-plugin-linux-amd64"
+  # Итоговое имя пакета плагина
+  PLUGIN_PACKAGE_NAME: "yandex-speechkit-${CI_COMMIT_TAG:-snapshot}.difypkg"
+
+build:
+  stage: build
+  image: debian:bookworm-slim
+  before_script:
+    - apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
+  script:
+    - echo "Скачиваю dify-plugin из $DIFY_PLUGIN_CLI_URL"
+    - curl -L --fail "$DIFY_PLUGIN_CLI_URL" -o dify-plugin
+    - chmod +x dify-plugin
+    - ./dify-plugin plugin package .
+    - pkg="$(ls -1 *.difypkg | head -n1)"
+    - mv "$pkg" "$PLUGIN_PACKAGE_NAME"
+  artifacts:
+    paths:
+      - $PLUGIN_PACKAGE_NAME
+    expire_in: 30 days
+
+release:
+  stage: release
+  image: alpine:3.20
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
+  needs:
+    - job: build
+      artifacts: true
+  before_script:
+    - apk add --no-cache curl jq
+  script:
+    - echo "Загружаю артефакт $PLUGIN_PACKAGE_NAME в uploads"
+    - 'UPLOAD_JSON=$(curl -sS --fail -X POST -H "JOB-TOKEN: $CI_JOB_TOKEN" -F "file=@$PLUGIN_PACKAGE_NAME" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/uploads")'
+    - ASSET_URL=$(echo "$UPLOAD_JSON" | jq -r .url)
+    - FULL_ASSET_URL="$CI_PROJECT_URL$ASSET_URL"
+    - echo "Создаю релиз $CI_COMMIT_TAG с ассетом $FULL_ASSET_URL"
+    - |
+      curl -sS --fail -X POST -H "JOB-TOKEN: $CI_JOB_TOKEN" \
+        --data-urlencode "name=$CI_COMMIT_TAG" \
+        --data-urlencode "tag_name=$CI_COMMIT_TAG" \
+        --data-urlencode "description=Release $CI_COMMIT_TAG" \
+        --data-urlencode "assets[links][][name]=$PLUGIN_PACKAGE_NAME" \
+        --data-urlencode "assets[links][][url]=$FULL_ASSET_URL" \
+        "$CI_API_V4_URL/projects/$CI_PROJECT_ID/releases"
+
